@@ -34,6 +34,7 @@ const middlewares = [useValidator, kidneyValidator];
 app.post("/health-checkup", ...middlewares, function (req, res) {
   const kidneys = req.body.kidneys;
   const response = schema2.safeParse(kidneys);
+  // throw Error("This is an error for global error handler to catch");
   // console.log(response.error);
   if (!response.success) {
     res.status(411).send({
@@ -68,6 +69,15 @@ app.post("/login", function (req, res) {
   }
 });
 
+// global catches
+function globalError(err, req, res, next) {
+  res.json({
+    msg: "Sorry something went wrong with the server",
+  });
+  // console.log(err);
+}
+
+app.use(globalError);
 app.listen(port, () => {
   console.log(`App listening on port: ${port}`);
 });

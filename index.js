@@ -12,10 +12,10 @@ app.use(bodyParser.json());
 // const schema = zod.array(zod.number);
 
 const schema = zod.object({
-  email: zod.string(),
-  password: zod.string(),
-  country: zod.literal("IN").or(zod.literal("US")),
-  kidneys: zod.array(zod.number),
+  email: zod.string().email(),
+  password: zod.string().min(8),
+  // country: zod.literal("IN").or(zod.literal("US")),
+  // kidneys: zod.array(zod.number),
 });
 
 app.post("/health-checkup", function (req, res) {
@@ -28,6 +28,16 @@ app.post("/health-checkup", function (req, res) {
   } else {
     res.send({ response });
   }
+});
+
+function validateInput(obj) {
+  const response = schema.safeParse(obj);
+  console.log(response);
+}
+
+validateInput({
+  email: "abcd@gmail.com",
+  password: "adsffadaf",
 });
 
 app.listen(port, () => {
